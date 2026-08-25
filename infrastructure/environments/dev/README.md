@@ -26,3 +26,13 @@ terraform -chdir=infrastructure/environments/dev plan -out=tfplan
 ```
 
 The NAT Gateway begins hourly billing only after apply. Review the complete plan and teardown procedure before creating the environment.
+
+## ECR and EKS foundation
+
+The environment also provisions one immutable, scan-on-push ECR repository and an EKS 1.35 cluster using the AWS API authentication mode. Worker nodes run only in private subnets across two Availability Zones.
+
+The development data plane uses two on-demand `t3.medium` instances with encrypted `gp3` root volumes and IMDSv2 enforcement. EKS control-plane API access is private inside the VPC and publicly reachable only from explicitly trusted CIDRs. Kubernetes add-on versions are pinned to versions supported by EKS 1.35.
+
+Control-plane API, audit, and authenticator logs are retained for seven days. Cluster deletion protection remains disabled because this environment is intentionally disposable; production environments should use a separate protection and change-management policy.
+
+The EKS control plane, two EC2 nodes, NAT Gateway, public IPv4 address, EBS volumes, CloudWatch logs, and transferred data incur charges after apply. Do not apply until the entire delivery and teardown workflow is ready for a bounded validation window.

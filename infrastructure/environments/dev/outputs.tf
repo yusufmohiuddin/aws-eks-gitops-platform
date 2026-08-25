@@ -27,3 +27,23 @@ output "nat_gateway_public_ips" {
   description = "Public IP addresses assigned to NAT gateways."
   value       = module.vpc.nat_public_ips
 }
+
+output "ecr_repository_url" {
+  description = "Repository URL used to publish the reference service image."
+  value       = module.ecr.repository_url
+}
+
+output "eks_cluster_name" {
+  description = "Name of the development EKS cluster."
+  value       = module.eks.cluster_name
+}
+
+output "eks_cluster_endpoint" {
+  description = "Kubernetes API endpoint for the development cluster."
+  value       = module.eks.cluster_endpoint
+}
+
+output "eks_node_security_group_id" {
+  description = "Security group attached to EKS worker nodes."
+  value       = module.eks.node_security_group_id
+}

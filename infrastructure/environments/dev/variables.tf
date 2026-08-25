@@ -49,3 +49,45 @@ variable "additional_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "kubernetes_version" {
+  description = "EKS Kubernetes minor version under standard AWS support."
+  type        = string
+  default     = "1.35"
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "IPv4 CIDRs allowed to reach the public EKS API endpoint. Use trusted /32 addresses for the lab."
+  type        = list(string)
+
+  validation {
+    condition = length(var.cluster_endpoint_public_access_cidrs) > 0 && alltrue([
+      for cidr in var.cluster_endpoint_public_access_cidrs : can(cidrnetmask(cidr)) && cidr != "0.0.0.0/0"
+    ])
+    error_message = "Provide at least one trusted CIDR; unrestricted 0.0.0.0/0 access is prohibited."
+  }
+}
+
+variable "node_instance_types" {
+  description = "EC2 instance types available to the managed node group."
+  type        = list(string)
+  default     = ["t3.medium"]
+}
+
+variable "node_desired_size" {
+  description = "Desired number of EKS worker nodes."
+  type        = number
+  default     = 2
+}
+
+variable "node_min_size" {
+  description = "Minimum number of EKS worker nodes."
+  type        = number
+  default     = 2
+}
+
+variable "node_max_size" {
+  description = "Maximum number of EKS worker nodes."
+  type        = number
+  default     = 3
+}

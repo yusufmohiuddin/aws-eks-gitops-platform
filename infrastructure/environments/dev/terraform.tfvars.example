@@ -8,3 +8,12 @@ enable_flow_logs   = false
 additional_tags = {
   Owner = "platform-engineering"
 }
+
+# Replace with the trusted public IPv4 address used for this deployment.
+cluster_endpoint_public_access_cidrs = ["203.0.113.10/32"]
+
+kubernetes_version = "1.35"
+node_instance_types = ["t3.medium"]
+node_min_size        = 2
+node_desired_size    = 2
+node_max_size        = 3
