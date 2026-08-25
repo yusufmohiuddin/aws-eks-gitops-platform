@@ -1,0 +1,40 @@
+# Operating system
+.DS_Store
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+kubeconfig
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+tfplan
+terraform-plan.txt
+crash.log
+
+# Kubernetes and Helm
+*.tgz
+rendered-manifests/
+
+# IDE
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.log
