@@ -46,6 +46,12 @@ jobs:
       - name: Validate bootstrap configuration
         run: terraform -chdir=infrastructure/bootstrap validate
 
+      - name: Initialize development environment without remote backend
+        run: terraform -chdir=infrastructure/environments/dev init -backend=false
+
+      - name: Validate development environment
+        run: terraform -chdir=infrastructure/environments/dev validate
+
       - name: Scan Terraform configuration
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
