@@ -57,6 +57,7 @@ jobs:
         with:
           scan-type: config
           scan-ref: infrastructure
+          skip-dirs: "**/.terraform"
           severity: HIGH,CRITICAL
           exit-code: "1"
           hide-progress: true
