@@ -1,0 +1,31 @@
+# This file is the approved deployment state. Automation updates only image fields.
+replicaCount: 2
+
+image:
+  repository: pending-ecr-publication
+  tag: ""
+  digest: ""
+  pullPolicy: IfNotPresent
+
+configuration:
+  serviceName: platform-reference-service
+  serviceVersion: "0.1.0"
+  gitSha: pending
+  environment: development
+  logLevel: INFO
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+serviceMonitor:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack
+
+prometheusRule:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack

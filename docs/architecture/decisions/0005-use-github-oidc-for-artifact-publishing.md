@@ -21,7 +21,7 @@ the reference-service repository. Do not grant Kubernetes, Terraform, IAM, or
 general AWS permissions.
 
 Before publishing, build and scan the image for high and critical
-vulnerabilities and generate an SPDX SBOM. Publish an immutable commit-SHA tag
+vulnerabilities and generate an SPDX SBOM. Publish an immutable commit-SHA and workflow-attempt tag
 with BuildKit provenance and SBOM attestations. Record the resulting image
 digest as the release identity.
 

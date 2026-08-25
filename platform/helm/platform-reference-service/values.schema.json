@@ -1,47 +1,172 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["image", "service", "configuration", "resources"],
+  "required": [
+    "image",
+    "service",
+    "configuration",
+    "resources"
+  ],
   "properties": {
-    "replicaCount": {"type": "integer", "minimum": 1},
+    "replicaCount": {
+      "type": "integer",
+      "minimum": 1
+    },
     "image": {
       "type": "object",
-      "required": ["repository", "pullPolicy"],
+      "required": [
+        "repository",
+        "pullPolicy"
+      ],
       "properties": {
-        "repository": {"type": "string", "minLength": 1},
-        "tag": {"type": "string"},
-        "digest": {"type": "string", "pattern": "^$|^sha256:[a-f0-9]{64}$"},
-        "pullPolicy": {"type": "string", "enum": ["Always", "IfNotPresent", "Never"]}
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^$|^sha256:[a-f0-9]{64}$"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        }
       }
     },
     "service": {
       "type": "object",
-      "required": ["type", "port", "targetPort"],
+      "required": [
+        "type",
+        "port",
+        "targetPort"
+      ],
       "properties": {
-        "type": {"type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"]},
-        "port": {"type": "integer", "minimum": 1, "maximum": 65535},
-        "targetPort": {"type": "integer", "minimum": 1, "maximum": 65535}
+        "type": {
+          "type": "string",
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer"
+          ]
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "targetPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        }
       }
     },
     "configuration": {
       "type": "object",
-      "required": ["serviceName", "serviceVersion", "gitSha", "environment", "logLevel"],
+      "required": [
+        "serviceName",
+        "serviceVersion",
+        "gitSha",
+        "environment",
+        "logLevel"
+      ],
       "properties": {
-        "serviceName": {"type": "string", "minLength": 1},
-        "serviceVersion": {"type": "string", "minLength": 1},
-        "gitSha": {"type": "string", "minLength": 1},
-        "environment": {"type": "string", "minLength": 1},
-        "logLevel": {"type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]}
+        "serviceName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "serviceVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gitSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logLevel": {
+          "type": "string",
+          "enum": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR",
+            "CRITICAL"
+          ]
+        }
       }
     },
     "autoscaling": {
       "type": "object",
-      "required": ["enabled", "minReplicas", "maxReplicas", "targetCPUUtilizationPercentage"],
+      "required": [
+        "enabled",
+        "minReplicas",
+        "maxReplicas",
+        "targetCPUUtilizationPercentage"
+      ],
       "properties": {
-        "enabled": {"type": "boolean"},
-        "minReplicas": {"type": "integer", "minimum": 1},
-        "maxReplicas": {"type": "integer", "minimum": 1},
-        "targetCPUUtilizationPercentage": {"type": "integer", "minimum": 1, "maximum": 100}
+        "enabled": {
+          "type": "boolean"
+        },
+        "minReplicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxReplicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "targetCPUUtilizationPercentage": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "labels"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "prometheusRule": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "labels"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
       }
     }
   }

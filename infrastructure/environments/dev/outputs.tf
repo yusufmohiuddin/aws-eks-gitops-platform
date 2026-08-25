@@ -1,3 +1,8 @@
+output "aws_region" {
+  description = "AWS Region hosting the development platform."
+  value       = var.aws_region
+}
+
 output "aws_account_id" {
   description = "AWS account hosting the development platform."
   value       = data.aws_caller_identity.current.account_id

@@ -36,3 +36,21 @@ The development data plane uses two on-demand `t3.medium` instances with encrypt
 Control-plane API, audit, and authenticator logs are retained for seven days. Cluster deletion protection remains disabled because this environment is intentionally disposable; production environments should use a separate protection and change-management policy.
 
 The EKS control plane, two EC2 nodes, NAT Gateway, public IPv4 address, EBS volumes, CloudWatch logs, and transferred data incur charges after apply. Do not apply until the entire delivery and teardown workflow is ready for a bounded validation window.
+
+## Complete lifecycle
+
+Use repository Make targets instead of assembling the sequence from memory:
+
+```bash
+make cloud-plan
+CONFIRM_APPLY=aws-eks-gitops-platform-dev make cloud-apply
+make cloud-kubeconfig
+make gitops-bootstrap
+make cloud-verify
+CONFIRM_DESTROY=aws-eks-gitops-platform-dev make cloud-destroy
+```
+
+Both mutation commands require the exact environment name. Argo CD Applications
+are removed before Terraform destroy so Kubernetes-created load balancers or
+other dependent resources cannot strand the VPC. The bootstrap state bucket is
+managed separately and deliberately survives this lifecycle.

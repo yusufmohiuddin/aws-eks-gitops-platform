@@ -31,7 +31,7 @@ module "ecr" {
         description  = "Retain the most recent twenty release images"
         selection = {
           tagStatus     = "tagged"
-          tagPrefixList = ["v"]
+          tagPrefixList = ["sha-"]
           countType     = "imageCountMoreThan"
           countNumber   = 20
         }

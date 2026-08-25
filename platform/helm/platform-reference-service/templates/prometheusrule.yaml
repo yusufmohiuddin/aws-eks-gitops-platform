@@ -1,0 +1,34 @@
+{{- if .Values.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "platform-reference-service.fullname" . }}
+  labels:
+    {{- include "platform-reference-service.labels" . | nindent 4 }}
+    {{- with .Values.prometheusRule.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: platform-reference-service.availability
+      rules:
+        - alert: PlatformReferenceServiceUnavailable
+          expr: kube_deployment_status_replicas_available{namespace="{{ .Release.Namespace }}", deployment="{{ include "platform-reference-service.fullname" . }}"} < 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Platform reference service has no available replicas
+            description: The deployment has reported zero available replicas for five minutes.
+        - alert: PlatformReferenceServiceHighErrorRate
+          expr: |
+            sum(rate(platform_reference_http_requests_total{namespace="{{ .Release.Namespace }}",status_code=~"5.."}[5m]))
+              /
+            clamp_min(sum(rate(platform_reference_http_requests_total{namespace="{{ .Release.Namespace }}"}[5m])), 0.001) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Platform reference service HTTP error rate is above 5 percent
+            description: More than 5 percent of observed requests returned a 5xx response for ten minutes.
+{{- end }}
