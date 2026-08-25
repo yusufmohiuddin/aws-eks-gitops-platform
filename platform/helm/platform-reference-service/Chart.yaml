@@ -1,0 +1,6 @@
+apiVersion: v2
+name: platform-reference-service
+description: Helm chart for the AWS EKS GitOps Platform reference workload
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
