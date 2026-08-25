@@ -47,3 +47,8 @@ output "eks_node_security_group_id" {
   description = "Security group attached to EKS worker nodes."
   value       = module.eks.node_security_group_id
 }
+
+output "github_ecr_publish_role_arn" {
+  description = "Role ARN configured as the AWS_ECR_PUBLISH_ROLE_ARN GitHub repository variable."
+  value       = aws_iam_role.github_ecr_publisher.arn
+}
