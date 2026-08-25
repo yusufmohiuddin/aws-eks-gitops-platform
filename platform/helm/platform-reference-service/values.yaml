@@ -1,0 +1,104 @@
+replicaCount: 2
+
+image:
+  repository: platform-reference-service
+  tag: local
+  digest: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+configuration:
+  serviceName: platform-reference-service
+  serviceVersion: "0.1.0"
+  gitSha: local
+  environment: development
+  logLevel: INFO
+
+startupProbe:
+  httpGet:
+    path: /health/live
+    port: http
+  failureThreshold: 30
+  periodSeconds: 2
+
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: http
+  periodSeconds: 5
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+topologySpreadConstraints:
+  enabled: true
+  maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+  whenUnsatisfiable: ScheduleAnyway
+
+networkPolicy:
+  enabled: true
+  ingressPort: 8080
+
+terminationGracePeriodSeconds: 30
+revisionHistoryLimit: 5
