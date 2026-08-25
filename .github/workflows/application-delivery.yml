@@ -19,7 +19,7 @@ concurrency:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: platform-reference-service
-  IMAGE_TAG: sha-${{ github.sha }}
+  IMAGE_TAG: sha-${{ github.sha }}-${{ github.run_attempt }}
 
 jobs:
   publish:
@@ -96,4 +96,55 @@ jobs:
             echo "## Published image"
             echo
             echo "\`${ECR_REGISTRY}/${ECR_REPOSITORY}@${IMAGE_DIGEST}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Update approved deployment candidate
+        env:
+          ECR_REGISTRY: ${{ steps.ecr.outputs.registry }}
+          IMAGE_DIGEST: ${{ steps.publish.outputs.digest }}
+        run: >-
+          ./scripts/update-image-digest.py
+          --file platform/gitops/environments/dev/platform-reference-service/values.yaml
+          --repository "${ECR_REGISTRY}/${ECR_REPOSITORY}"
+          --digest "${IMAGE_DIGEST}"
+          --git-sha "${GITHUB_SHA}"
+
+      - name: Create short-lived GitHub App token
+        id: delivery-app
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.DELIVERY_APP_ID }}
+          private-key: ${{ secrets.DELIVERY_APP_PRIVATE_KEY }}
+
+      - name: Propose digest promotion pull request
+        id: promotion
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.delivery-app.outputs.token }}
+          branch: delivery/promote-platform-reference-service
+          delete-branch: true
+          commit-message: "chore: promote platform reference service"
+          title: "chore: promote platform reference service"
+          body: |
+            Promotes the verified application artifact by immutable digest.
+
+            - Source commit: `${{ github.sha }}`
+            - Image: `${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}@${{ steps.publish.outputs.digest }}`
+            - Evidence: tests, vulnerability scan, SPDX SBOM, and provenance attestation completed in run `${{ github.run_id }}`
+
+            Argo CD will reconcile this change only after review and merge.
+
+      - name: Record promotion result
+        env:
+          PULL_REQUEST_URL: ${{ steps.promotion.outputs.pull-request-url }}
+        run: |
+          {
+            echo
+            echo "## Promotion"
+            echo
+            if [[ -n "${PULL_REQUEST_URL}" ]]; then
+              echo "Proposed reviewed deployment state: ${PULL_REQUEST_URL}"
+            else
+              echo "The approved deployment state already references this digest."
+            fi
           } >> "${GITHUB_STEP_SUMMARY}"

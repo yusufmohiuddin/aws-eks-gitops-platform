@@ -102,3 +102,11 @@ networkPolicy:
 
 terminationGracePeriodSeconds: 30
 revisionHistoryLimit: 5
+
+serviceMonitor:
+  enabled: false
+  labels: {}
+
+prometheusRule:
+  enabled: false
+  labels: {}

@@ -1,0 +1,61 @@
+name: gitops-ci
+
+on:
+  pull_request:
+    paths:
+      - "platform/gitops/**"
+      - "platform/observability/**"
+      - "platform/helm/**"
+      - "scripts/update-image-digest.py"
+      - "scripts/tests/**"
+      - "scripts/gitops-render-check.sh"
+      - ".github/workflows/gitops-ci.yml"
+      - ".github/workflows/application-delivery.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "platform/gitops/**"
+      - "platform/observability/**"
+      - "platform/helm/**"
+      - "scripts/update-image-digest.py"
+      - "scripts/tests/**"
+      - "scripts/gitops-render-check.sh"
+      - ".github/workflows/gitops-ci.yml"
+      - ".github/workflows/application-delivery.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitops-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: GitOps quality gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.11.15"
+          enable-cache: true
+
+      - name: Install Helm
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: v3.20.2
+
+      - name: Test promotion safety
+        run: uv run --project application pytest scripts/tests/test_update_image_digest.py
+
+      - name: Validate desired state
+        run: ./scripts/gitops-render-check.sh
