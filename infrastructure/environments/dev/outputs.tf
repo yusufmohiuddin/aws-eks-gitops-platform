@@ -57,3 +57,13 @@ output "github_ecr_publish_role_arn" {
   description = "Role ARN configured as the AWS_ECR_PUBLISH_ROLE_ARN GitHub repository variable."
   value       = aws_iam_role.github_ecr_publisher.arn
 }
+
+output "system_registration_ecr_repository_url" {
+  description = "Private ECR repository used by the system registration service."
+  value       = module.system_registration_ecr.repository_url
+}
+
+output "system_registration_publish_role_arn" {
+  description = "OIDC publisher role configured in the system registration repository."
+  value       = aws_iam_role.system_registration_publisher.arn
+}
