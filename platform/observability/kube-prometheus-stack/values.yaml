@@ -1,4 +1,20 @@
 # Bounded development configuration; production sizing requires measured retention needs.
+# EKS manages the control plane outside the customer cluster. Disable the
+# upstream component discovery Services so this Argo CD project does not need
+# write access to kube-system.
+kubeApiServer:
+  enabled: true
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+coreDns:
+  enabled: false
+
 grafana:
   admin:
     existingSecret: grafana-admin
