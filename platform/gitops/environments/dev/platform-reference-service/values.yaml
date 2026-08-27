@@ -2,15 +2,15 @@
 replicaCount: 2
 
 image:
-  repository: pending-ecr-publication
+  repository: 974462541332.dkr.ecr.us-east-1.amazonaws.com/platform-reference-service
   tag: ""
-  digest: ""
+  digest: "sha256:bebf5e5067c0c4c54588b8a5ec1b62448e26f5d63a9f03da3dfcf1a18b980e5a"
   pullPolicy: IfNotPresent
 
 configuration:
   serviceName: platform-reference-service
   serviceVersion: "0.1.0"
-  gitSha: pending
+  gitSha: 14e18b6c0b22af2f48507ad5902806b4abcb399d
   environment: development
   logLevel: INFO
 
