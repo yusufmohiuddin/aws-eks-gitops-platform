@@ -31,6 +31,16 @@ variable "github_oidc_subject_prefix" {
   }
 }
 
+variable "system_registration_github_oidc_subject_prefix" {
+  description = "Immutable GitHub OIDC subject prefix for the system-registration-service repository."
+  type        = string
+
+  validation {
+    condition     = can(regex("^repo:[^/]+@[0-9]+/[^@]+@[0-9]+$", var.system_registration_github_oidc_subject_prefix))
+    error_message = "system_registration_github_oidc_subject_prefix must use GitHub's immutable repository subject format."
+  }
+}
+
 variable "vpc_cidr" {
   description = "IPv4 CIDR allocated to the development VPC."
   type        = string
