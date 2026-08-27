@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: system-registration-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: platform
+  sources:
+    - repoURL: https://github.com/yusufmohiuddin/aws-eks-gitops-platform.git
+      targetRevision: main
+      path: platform/helm/platform-reference-service
+      helm:
+        releaseName: system-registration-service
+        valueFiles:
+          - $values/platform/gitops/environments/dev/system-registration-service/values.yaml
+    - repoURL: https://github.com/yusufmohiuddin/aws-eks-gitops-platform.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+      - ServerSideApply=true
+  revisionHistoryLimit: 10
