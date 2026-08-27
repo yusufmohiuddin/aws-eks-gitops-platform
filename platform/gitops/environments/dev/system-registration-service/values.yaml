@@ -1,0 +1,35 @@
+# Approved deployment state for the system registration service.
+# One replica is intentional while the reference implementation uses in-memory storage.
+replicaCount: 1
+
+image:
+  repository: 974462541332.dkr.ecr.us-east-1.amazonaws.com/system-registration-service
+  tag: ""
+  digest: "sha256:f4db70338eee92455c9f9f50f76513be154dcf731c23420d5c31a8e33a7086c2"
+  pullPolicy: IfNotPresent
+
+nameOverride: system-registration-service
+fullnameOverride: system-registration-service
+
+configuration:
+  serviceName: system-registration-service
+  serviceVersion: "0.2.0"
+  gitSha: 056d687953c05bf18fdc3920d7880973541c876c
+  environment: development
+  logLevel: INFO
+
+autoscaling:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+
+serviceMonitor:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack
+
+prometheusRule:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack
