@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "github_ecr_publish_assume_role" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:yusufmohiuddin/aws-eks-gitops-platform:ref:refs/heads/main"]
+      values   = ["${var.github_oidc_subject_prefix}:ref:refs/heads/main"]
     }
   }
 }

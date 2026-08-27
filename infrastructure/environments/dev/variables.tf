@@ -21,6 +21,16 @@ variable "environment" {
   default     = "dev"
 }
 
+variable "github_oidc_subject_prefix" {
+  description = "Immutable GitHub OIDC repository subject prefix returned by the Actions OIDC customization API."
+  type        = string
+
+  validation {
+    condition     = can(regex("^repo:[^/]+@[0-9]+/[^@]+@[0-9]+$", var.github_oidc_subject_prefix))
+    error_message = "github_oidc_subject_prefix must use GitHub's immutable repo:OWNER@OWNER_ID/REPOSITORY@REPOSITORY_ID format."
+  }
+}
+
 variable "vpc_cidr" {
   description = "IPv4 CIDR allocated to the development VPC."
   type        = string
