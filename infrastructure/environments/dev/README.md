@@ -25,6 +25,17 @@ terraform -chdir=infrastructure/environments/dev validate
 terraform -chdir=infrastructure/environments/dev plan -out=tfplan
 ```
 
+Obtain the immutable repository identity used by the GitHub Actions trust
+policy and set it as `github_oidc_subject_prefix` in the ignored
+`terraform.tfvars` file:
+
+```bash
+gh api repos/OWNER/REPOSITORY/actions/oidc/customization/sub --jq .sub_claim_prefix
+```
+
+The IAM role additionally limits the subject to `refs/heads/main`; GitHub
+Actions receives no AWS credentials for pull requests or other branches.
+
 The NAT Gateway begins hourly billing only after apply. Review the complete plan and teardown procedure before creating the environment.
 
 ## ECR and EKS foundation
