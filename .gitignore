@@ -40,3 +40,5 @@ rendered-manifests/
 # Temporary files
 *.tmp
 *.log
+.cache/
+sbom.spdx.json
