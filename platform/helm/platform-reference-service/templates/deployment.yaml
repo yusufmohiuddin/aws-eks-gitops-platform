@@ -68,6 +68,8 @@ spec:
               value: {{ .Values.configuration.environment | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.configuration.logLevel | quote }}
+            - name: TARGET_VERSION
+              value: {{ .Values.configuration.targetVersion | quote }}
           startupProbe:
             {{- toYaml .Values.startupProbe | nindent 12 }}
           livenessProbe:
