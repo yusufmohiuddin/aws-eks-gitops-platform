@@ -17,6 +17,7 @@ configuration:
   gitSha: 056d687953c05bf18fdc3920d7880973541c876c
   environment: development
   logLevel: INFO
+  targetVersion: "1.4.0"
 
 autoscaling:
   enabled: false

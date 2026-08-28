@@ -48,6 +48,7 @@ configuration:
   gitSha: local
   environment: development
   logLevel: INFO
+  targetVersion: "1.3.0"
 
 startupProbe:
   httpGet:

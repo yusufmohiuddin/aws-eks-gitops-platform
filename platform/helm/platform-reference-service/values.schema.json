@@ -75,7 +75,8 @@
         "serviceVersion",
         "gitSha",
         "environment",
-        "logLevel"
+        "logLevel",
+        "targetVersion"
       ],
       "properties": {
         "serviceName": {
@@ -103,6 +104,10 @@
             "ERROR",
             "CRITICAL"
           ]
+        },
+        "targetVersion": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
